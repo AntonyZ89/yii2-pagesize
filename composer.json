@@ -31,9 +31,6 @@
   "autoload": {
     "psr-4": {
       "antonyz89\\pagesize\\": "src"
-    },
-    "files": [
-      "functions.php"
-    ]
+    }
   }
 }

@@ -35,7 +35,28 @@ to the require section of your `composer.json` file.
 
 ## USAGE
 
-1 - Update your ActiveDataProvider on SearchModel:
+1 - Add the translation:
+
+`common/config/main.php`
+
+```php
+return [
+    ...
+    'components' => [
+        'i18n' => [
+            'translations' => [
+                'pagesize' => [
+                    'class' => \yii\i18n\PhpMessageSource::class,
+                    'basePath' => '@antonyz89/pagesize/messages',
+                ]
+            ]
+        ]
+    ],
+    ...
+];
+```
+
+2 - Update your ActiveDataProvider on SearchModel:
 
 ```php
 use antonyz89\pagesize\PageSize;
@@ -52,7 +73,7 @@ public function search($params)
 }
 ```
 
-2 - Add `panel -> footer` to your GridView:
+3 - Add `panel -> footer` to your GridView:
 
 ```php
 use antonyz89\pagesize\PageSize;
