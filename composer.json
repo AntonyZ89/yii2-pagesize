@@ -1,0 +1,39 @@
+{
+  "name": "antonyz89/yii2-pagesize",
+  "description": "dynamic page size for gridview",
+  "keywords": [
+    "antonyz89",
+    "yii2",
+    "extension",
+    "widget",
+    "page",
+    "size",
+    "pagesize",
+    "page size",
+    "grid",
+    "gridview"
+  ],
+  "type": "yii2-extension",
+  "license": "BSD-3-Clause",
+  "support": {
+    "issues": "https://github.com/antonyz89/yii2-pagesize/issues",
+    "source": "https://github.com/antonyz89/yii2-pagesize"
+  },
+  "authors": [
+    {
+      "name": "Antony Gabriel"
+    }
+  ],
+  "require": {
+    "php": ">=7",
+    "yiisoft/yii2": "^2.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "antonyz89\\pagesize\\": "src"
+    },
+    "files": [
+      "functions.php"
+    ]
+  }
+}
