@@ -32,17 +32,15 @@ class PageSize
      */
     public static function options($id = 'pagesize')
     {
-        $options = array_map(static function ($value) {
+        $options = implode("\n", array_map(static function ($value) {
             return "<option value='$value'  " . (self::getPageSize() === (string)$value ? 'selected' : null) . ">$value</option>";
-        }, self::$values);
+        }, self::$values));
 
         return "
         <select id='$id' name='pageSize'>
-            <option value='0'  " . (self::getPageSize() === '0' ? 'selected' : null) . ">" . Yii::t('pagesize', 'All') . "</option>
+            <option value='0'" . (self::getPageSize() === '0' ? 'selected' : null) . ">" . Yii::t('pagesize', 'All') . "</option>
             $options
         </select>
         ";
     }
-
-
 }

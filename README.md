@@ -127,9 +127,7 @@ class GridView extends \yii\grid\GridView
         $this->panel['footer'] = "
             {pager} {summary}
             <div class='pull-right margin-r-5'>
-                <select id='pagesize' name='pageSize'>
                 " . PageSize::options() . "
-                </select>
             </div>
         ";
 
