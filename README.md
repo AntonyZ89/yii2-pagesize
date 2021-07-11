@@ -59,17 +59,20 @@ return [
 2 - Update your ActiveDataProvider on SearchModel:
 
 ```php
-use antonyz89\pagesize\PageSize;
+use antonyz89\pagesize\PageSizeTrait;
 
-public function search($params)
-{
-    ...
-    $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-        'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
-        'pagination' => PageSize::getPageSize() === '0' ? false : ['pageSize' => PageSize::getPageSize()],
-    ]);
-    ...
+public class ExampleSearch extends Example {
+    use PageSizeTrait;
+
+    public function search($params)
+    {
+        ...
+        $dataProvider = new ActiveDataProvider([
+            ...
+            'pagination' => $this->pagination,
+        ]);
+        ...
+    }
 }
 ```
 
@@ -77,6 +80,12 @@ public function search($params)
 
 ```php
 use antonyz89\pagesize\PageSize;
+
+$pageSize = PageSize::widget([
+    'options' => [
+        'id' => 'pagesize' // without #
+    ]
+]);
 
 GridView::widget([
     ...
@@ -86,7 +95,7 @@ GridView::widget([
         'footer' => "
             {pager} {summary}
             <div class='float-right'>
-                " . PageSize::options() . "
+                $pageSize
             </div>
         "
     ],
@@ -94,15 +103,45 @@ GridView::widget([
 ]);
 ```
 
-##Optional
+## Optional
 
-1 - In your `common/config/main.php`, you can override default values:
+1 - In your `common/config/bootstrap.php`, you can override default values:
 
 ```php
 use antonyz89\pagesize\PageSize;
 
 PageSize::$defaultPageSize = 10;
 PageSize::$values = [10, 20, 30, 40, 50];
+
+/* `PageSize::$renderItem` to being used in `$renderSelect` */
+PageSize::$renderItem = static function ($value, $key, $page) {
+    return [$key, $value];
+};
+
+/*
+ * `PageSize::$renderSelect`, use for render a custom select.
+ * If needed override $renderItem to return `$items` as you want
+ */
+PageSize::$renderSelect = static function ($options, $items, $pageSize) {
+    $items = array_combine(
+        array_map(static function ($value) {
+            return $value[0];
+        }, $items),
+        array_map(static function ($value) {
+            return $value[1];
+        }, $items)
+    );
+
+
+    return Select2::widget([
+        'name' => $options['name'],
+        'id' => $options['id'],
+        'data' => $items,
+        'value' => $pageSize,
+        'hideSearch' => true,
+        'theme' => Select2::THEME_MATERIAL
+    ]);
+};
 ```
 
 2 - Create a GridView for you! Avoid duplicate code.
@@ -114,7 +153,6 @@ PageSize::$values = [10, 20, 30, 40, 50];
 
 namespace common\components;
 
-use Yii;
 use antonyz89\pagesize\PageSize;
 
 class GridView extends \yii\grid\GridView
@@ -124,10 +162,16 @@ class GridView extends \yii\grid\GridView
 
     protected function initPanel()
     {
+        $pageSize = PageSize::widget([
+            'options' => [
+                'id' => str_replace('#', '', $this->filterSelector) // without #
+            ]
+        ]);
+    
         $this->panel['footer'] = "
             {pager} {summary}
-            <div class='pull-right margin-r-5'>
-                " . PageSize::options() . "
+            <div class='float-right'>
+                $pageSize
             </div>
         ";
 
