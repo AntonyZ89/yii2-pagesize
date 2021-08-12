@@ -56,41 +56,21 @@ return [
 ];
 ```
 
-2 - Update your ActiveDataProvider on SearchModel:
-
-```php
-use antonyz89\pagesize\PageSizeTrait;
-
-public class ExampleSearch extends Example {
-    use PageSizeTrait;
-
-    public function search($params)
-    {
-        ...
-        $dataProvider = new ActiveDataProvider([
-            ...
-            'pagination' => $this->pagination,
-        ]);
-        ...
-    }
-}
-```
-
-3 - Add `panel -> footer` to your GridView:
+2 - Add `panel -> footer` to your GridView:
 
 ```php
 use antonyz89\pagesize\PageSize;
 
 $pageSize = PageSize::widget([
     'options' => [
-        'id' => 'pagesize' // without #
+        'id' => 'per-page' // without #
     ]
 ]);
 
 GridView::widget([
     ...
     'panelFooterTemplate' => '{footer}<div class="clearfix"></div>',
-    'filterSelector' => '#pagesize',
+    'filterSelector' => '#per-page', // with #
     'panel' => [
         'footer' => "
             {pager} {summary}
@@ -122,7 +102,7 @@ PageSize::$renderItem = static function ($value, $key, $page) {
  * `PageSize::$renderSelect`, use for render a custom select.
  * If needed override $renderItem to return `$items` as you want
  */
-PageSize::$renderSelect = static function ($options, $items, $pageSize) {
+PageSize::$renderSelect = static function (array $options, array $items, string $pageSize) {
     $items = array_combine(
         array_map(static function ($value) {
             return $value[0];
@@ -178,4 +158,68 @@ class GridView extends \yii\grid\GridView
         parent::initPanel();
     }
 }
+```
+
+## Use custom pagesize ID
+
+1 - Update your ActiveDataProvider on SearchModel:
+
+```php
+use antonyz89\pagesize\PageSizeTrait;
+
+public class ExampleSearch extends Example {
+    use PageSizeTrait; // add PageSizeTrait
+    
+    public $pageSizeId = 'custom-pagesize'; // custom ID
+
+    public function search($params)
+    {
+        ...
+        $dataProvider = new ActiveDataProvider([
+            ...
+            'pagination' => $this->pagination, // add `$this->pagination`
+        ]);
+        ...
+    }
+}
+```
+
+2 - Add `panel -> footer` to your GridView:
+
+```php
+use antonyz89\pagesize\PageSize;
+
+$pageSize = PageSize::widget([
+    'options' => [
+        'id' => 'custom-pagesize' // without #
+    ]
+]);
+
+GridView::widget([
+    ...
+    'panelFooterTemplate' => '{footer}<div class="clearfix"></div>',
+    'filterSelector' => '#custom-pagesize', // with #
+    'panel' => [
+        'footer' => "
+            {pager} {summary}
+            <div class='float-right'>
+                $pageSize
+            </div>
+        "
+    ],
+    ...
+]);
+```
+
+2.1 - If you created your own `GridView`, you just need to override `filterSelector`:
+
+```php
+use my\own\GridView;
+
+
+GridView::widget([
+    ...
+    'filterSelector' => '#custom-pagesize', // with #
+    ...
+]);
 ```

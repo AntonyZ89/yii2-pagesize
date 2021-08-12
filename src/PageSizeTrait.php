@@ -2,8 +2,6 @@
 
 namespace antonyz89\pagesize;
 
-use yii\helpers\Inflector;
-
 /**
  * Trait PageSizeTrait
  * @package antonyz89\pagesize
@@ -14,6 +12,9 @@ use yii\helpers\Inflector;
  */
 trait PageSizeTrait
 {
+    /** @var string|null */
+    public $pageSizeId = 'per-page';
+
     /** @var PageSize|null */
     private $_pageSize;
 
@@ -39,11 +40,9 @@ trait PageSizeTrait
     public function getPageSize(): PageSize
     {
         if ($this->_pageSize === null) {
-            $name = explode('\\', __CLASS__);
-
             $this->_pageSize = new PageSize([
                 'options' => [
-                    'id' => strtolower(array_pop($name)) . '-pagesize'
+                    'id' => $this->pageSizeId
                 ]
             ]);
         }

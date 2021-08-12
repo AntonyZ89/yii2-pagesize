@@ -53,7 +53,7 @@ class PageSize extends Widget
             self::$renderSelect = static function ($options, $items) {
                 return Html::tag(
                     'select',
-                    implode("\n", $values),
+                    implode("\n", $items),
                     $options
                 );
             };
@@ -67,9 +67,6 @@ class PageSize extends Widget
 
     public function registerJs()
     {
-
-        $var = 'select_' . preg_replace("/[\s-]/", '_', trim($this->id));
-
         $js = /* @lang JavaScript */"
 $(document).on('pjax:success', '[data-pjax-container]', function() {
     const selects = $('[data-krajee-select2]');
@@ -94,7 +91,7 @@ $(document).on('pjax:success', '[data-pjax-container]', function() {
     {
         $values = array_combine(self::$values, self::$values);
 
-        $values[0] = Yii::t('pagesize', 'All');
+        //$values[0] = Yii::t('pagesize', 'All'); FIXME disabled because 0 value is converted to 1 row instead infinite rows on `Pagination::getPageCount`
 
         ksort($values);
 

@@ -11,7 +11,8 @@
     "pagesize",
     "page size",
     "grid",
-    "gridview"
+    "gridview",
+    "per-page"
   ],
   "type": "yii2-extension",
   "license": "BSD-3-Clause",
